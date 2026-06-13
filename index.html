@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+    <title>Amazon Product Keyword Density & Readability Analyzer | Etsy & Shopify Sellers</title>
+    <meta name="description" content="Analyze Amazon product keyword density and readability for Etsy, Amazon, and Shopify sellers. Free SEO tool for listing optimization, title generator, CSV/JSON tools.">
+    <meta name="keywords" content="shopify seo preview, etsy listing seo checker, amazon product title generator, csv to shopify import, json to csv converter, etsy sellers, amazon sellers, shopify sellers, csv/json tools, developer tools">
+    <link rel="canonical" href="https://example.com/amazon-keyword-density-readability-analyzer">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+            background: #f5f7fa;
+            color: #1e293b;
+            line-height: 1.6;
+            padding: 16px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            padding: 1.5rem 0.5rem 1rem;
+        }
+        h1 {
+            font-size: 1.9rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.25rem;
+        }
+        .subhead {
+            font-size: 1.05rem;
+            color: #475569;
+            max-width: 700px;
+            margin: 0.5rem auto 1rem;
+        }
+        .badge-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px 12px;
+            margin: 0.75rem 0 1.5rem;
+        }
+        .badge {
+            background: #e2e8f0;
+            padding: 4px 14px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #1e293b;
+            letter-spacing: 0.02em;
+        }
+        .card {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+            padding: 1.8rem 1.5rem;
+            margin-bottom: 2rem;
+            transition: box-shadow 0.2s;
+        }
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .card-title small {
+            font-weight: 400;
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+        .flex-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .flex-col {
+            flex: 1 1 260px;
+        }
+        label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: block;
+            margin-bottom: 6px;
+            color: #1e293b;
+        }
+        textarea, input, select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 16px;
+            font-size: 0.95rem;
+            background: #f8fafc;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+        textarea:focus, input:focus, select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+        }
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .btn {
+            background: #1e293b;
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn:hover {
+            background: #0f172a;
+            transform: scale(0.98);
+        }
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #1e293b;
+        }
+        .btn-secondary:hover {
+            background: #cbd5e1;
+        }
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 1.2rem;
+        }
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 16px;
+            margin: 1.5rem 0 1rem;
+        }
+        .stat-card {
+            background: #f1f5f9;
+            border-radius: 20px;
+            padding: 1rem 0.8rem;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #0f172a;
+            line-height: 1.2;
+        }
+        .stat-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: #475569;
+            font-weight: 600;
+        }
+        .density-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+        .density-table th {
+            text-align: left;
+            background: #f1f5f9;
+            padding: 8px 12px;
+            font-weight: 600;
+        }
+        .density-table td {
+            padding: 8px 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .density-table tr:last-child td {
+            border-bottom: none;
+        }
+        .progress-bar-bg {
+            background: #e2e8f0;
+            border-radius: 20px;
+            height: 8px;
+            width: 100%;
+            margin-top: 4px;
+        }
+        .progress-fill {
+            height: 8px;
+            border-radius: 20px;
+            background: #3b82f6;
+            width: 0%;
+        }
+        .readability-score {
+            display: inline-block;
+            background: #dbeafe;
+            padding: 2px 14px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        .ad-placeholder {
+            background: #f8fafc;
+            border: 1px dashed #94a3b8;
+            border-radius: 20px;
+            padding: 1.2rem;
+            text-align: center;
+            color: #64748b;
+            margin: 1.5rem 0;
+            font-size: 0.9rem;
+        }
+        .affiliate-section {
+            background: #f1f5f9;
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        .affiliate-section h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.75rem;
+        }
+        .affiliate-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .affiliate-links a {
+            background: white;
+            padding: 8px 18px;
+            border-radius: 40px;
+            text-decoration: none;
+            color: #1e293b;
+            font-weight: 500;
+            border: 1px solid #cbd5e1;
+            transition: 0.2s;
+        }
+        .affiliate-links a:hover {
+            background: #e2e8f0;
+        }
+        .privacy-note {
+            font-size: 0.8rem;
+            color: #64748b;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 1rem;
+            margin-top: 2rem;
+            text-align: center;
+        }
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px 20px;
+            margin: 1rem 0 0.5rem;
+            font-size: 0.85rem;
+        }
+        .footer-links a {
+            color: #3b82f6;
+            text-decoration: none;
+        }
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .card { padding: 1.2rem 1rem; }
+            h1 { font-size: 1.6rem; }
+            .result-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>🔍 Keyword Density & Readability Analyzer</h1>
+        <div class="subhead">Optimize your Amazon, Etsy & Shopify listings. Paste your product title & description below.</div>
+        <div class="badge-group">
+            <span class="badge">Amazon Sellers</span>
+            <span class="badge">Etsy Sellers</span>
+            <span class="badge">Shopify Sellers</span>
+            <span class="badge">CSV/JSON Tools</span>
+            <span class="badge">Developer Tools</span>
+        </div>
+    </header>
+
+    <!-- Main Tool Card -->
+    <div class="card">
+        <div class="card-title">
+            <span>📊 Listing Analyzer</span>
+            <small>paste your product text</small>
+        </div>
+        <div class="flex-row">
+            <div class="flex-col">
+                <label for="productTitle">Product Title</label>
+                <textarea id="productTitle" rows="2" placeholder="e.g. Premium Organic Cotton Baby Onesie - Soft & Breathable">Premium Organic Cotton Baby Onesie - Soft & Breathable</textarea>
+            </div>
+            <div class="flex-col">
+                <label for="productDesc">Product Description / Bullet Points</label>
+                <textarea id="productDesc" rows="5" placeholder="Paste your description or bullet points here...">Our organic cotton onesie is made from 100% GOTS certified organic cotton. Designed for maximum comfort and durability. Features reinforced snaps and tagless neck. Perfect for sensitive skin. Machine washable.</textarea>
+            </div>
+        </div>
+        <div class="flex-row" style="margin-top: 8px;">
+            <div class="flex-col">
+                <label for="keywordInput">Target Keyword (optional)</label>
+                <input type="text" id="keywordInput" placeholder="e.g. organic cotton onesie" value="organic cotton">
+            </div>
+            <div class="flex-col" style="display: flex; align-items: flex-end; justify-content: flex-end;">
+                <button class="btn" id="analyzeBtn">⚡ Analyze Now</button>
+            </div>
+        </div>
+
+        <!-- Results area -->
+        <div id="resultsArea" style="margin-top: 1.8rem;">
+            <div class="result-grid" id="statsGrid">
+                <div class="stat-card"><div class="stat-number" id="totalWords">0</div><div class="stat-label">Total Words</div></div>
+                <div class="stat-card"><div class="stat-number" id="keywordDensity">0%</div><div class="stat-label">Keyword Density</div></div>
+                <div class="stat-card"><div class="stat-number" id="readabilityScore">—</div><div class="stat-label">Readability (Flesch)</div></div>
+                <div class="stat-card"><div class="stat-number" id="keywordCount">0</div><div class="stat-label">Keyword Mentions</div></div>
+            </div>
+
+            <div style="margin-top: 1rem;">
+                <h3 style="font-size:1rem; font-weight:600; margin-bottom:0.5rem;">📋 Keyword Frequency (top 10)</h3>
+                <div style="overflow-x:auto;">
+                    <table class="density-table" id="densityTable">
+                        <thead><tr><th>Word</th><th>Count</th><th>Density</th><th>Bar</th></tr></thead>
+                        <tbody id="densityBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div style="margin-top: 1.2rem; background:#f8fafc; border-radius:16px; padding:0.8rem 1rem;">
+                <span style="font-weight:600;">📖 Readability Level: </span>
+                <span id="readabilityLabel">Standard</span>
+                <span style="margin-left:1rem; font-size:0.85rem; color:#475569;" id="readabilityHint">(aim for 60-70 for broad appeal)</span>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn btn-secondary" id="clearBtn">🗑️ Clear</button>
+            <button class="btn btn-secondary" id="exampleBtn">📄 Load Example</button>
+        </div>
+    </div>
+
+    <!-- Ad Placeholder -->
+    <div class="ad-placeholder">
+        <strong>📌 Sponsored</strong> — <em>Amazon Product Title Generator</em> — Create high-converting titles in seconds. 
+        <a href="#" style="color:#3b82f6; text-decoration:underline;">Try free tool →</a> 
+        <span style="display:block; font-size:0.75rem; margin-top:4px;">(affiliate link)</span>
+    </div>
+
+    <!-- Affiliate / Resource Section -->
+    <div class="affiliate-section">
+        <h3>🛠️ Resources for Sellers & Developers</h3>
+        <div class="affiliate-links">
+            <a href="#">📦 Shopify SEO Preview</a>
+            <a href="#">🔎 Etsy Listing SEO Checker</a>
+            <a href="#">📝 Amazon Title Generator</a>
+            <a href="#">📊 CSV to Shopify Import</a>
+            <a href="#">🔄 JSON to CSV Converter</a>
+            <a href="#">🧰 Developer Tools</a>
+        </div>
+        <p style="margin-top:0.8rem; font-size:0.85rem; color:#475569;">Some links are affiliate links. We may earn a small commission at no extra cost to you.</p>
+    </div>
+
+    <!-- Footer / Privacy -->
+    <div class="privacy-note">
+        <div class="footer-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms</a>
+            <a href="#">Contact</a>
+        </div>
+        <p style="margin-top:0.5rem;">🔒 Events may be counted anonymously for product improvement. No personal data collected. We use <strong>reportEvent</strong> for anonymous metrics if endpoint is configured.</p>
+        <p style="font-size:0.75rem; margin-top:0.3rem;">&copy; 2025 Keyword Analyzer. All tools run locally in your browser.</p>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // ---------- Utility ----------
+        function getWords(text) {
+            return text.toLowerCase().match(/\b[a-z']+\b/g) || [];
+        }
+
+        function wordFrequency(words) {
+            const freq = {};
+            words.forEach(w => { freq[w] = (freq[w] || 0) + 1; });
+            return freq;
+        }
+
+        function fleschReadingEase(text) {
+            const words = getWords(text);
+            if (words.length < 3) return 0;
+            const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0).length || 1;
+            const syllables = words.reduce((sum, w) => sum + countSyllables(w), 0);
+            const score = 206.835 - 1.015 * (words.length / sentences) - 84.6 * (syllables / words.length);
+            return Math.min(100, Math.max(0, Math.round(score * 10) / 10));
+        }
+
+        function countSyllables(word) {
+            word = word.toLowerCase();
+            if (word.length <= 3) return 1;
+            const vowels = word.match(/[aeiouy]+/g);
+            if (!vowels) return 1;
+            let count = vowels.length;
+            if (word.endsWith('e')) count--;
+            if (word.endsWith('le') && word.length > 2 && !'aeiouy'.includes(word[word.length-3])) count++;
+            if (word.endsWith('es') || word.endsWith('ed')) count--;
+            return Math.max(1, count);
+        }
+
+        function readabilityLabel(score) {
+            if (score >= 90) return 'Very Easy (5th grade)';
+            if (score >= 80) return 'Easy (6th grade)';
+            if (score >= 70) return 'Fairly Easy (7th grade)';
+            if (score >= 60) return 'Standard (8th-9th)';
+            if (score >= 50) return 'Fairly Difficult (10th-12th)';
+            if (score >= 30) return 'Difficult (college)';
+            return 'Very Difficult (graduate)';
+        }
+
+        // ---------- Core Analysis ----------
+        function analyze() {
+            const title = document.getElementById('productTitle').value.trim();
+            const desc = document.getElementById('productDesc').value.trim();
+            const keywordRaw = document.getElementById('keywordInput').value.trim().toLowerCase();
+            const fullText = title + ' ' + desc;
+            const words = getWords(fullText);
+            const totalWords = words.length;
+
+            // keyword density
+            let keywordDensity = 0;
+            let keywordCount = 0;
+            if (keywordRaw && totalWords > 0) {
+                const kwParts = keywordRaw.split(/\s+/).filter(Boolean);
+                if (kwParts.length === 1) {
+                    keywordCount = words.filter(w => w === keywordRaw).length;
+                } else {
+                    // phrase match
+                    const lowerText = fullText.toLowerCase();
+                    let count = 0;
+                    let pos = 0;
+                    while ((pos = lowerText.indexOf(keywordRaw, pos)) !== -1) {
+                        count++;
+                        pos += keywordRaw.length;
+                    }
+                    keywordCount = count;
+                }
+                keywordDensity = totalWords > 0 ? ((keywordCount / totalWords) * 100) : 0;
+            }
+
+            // readability
+            const readability = fleschReadingEase(fullText);
+            const label = readabilityLabel(readability);
+
+            // frequency table
+            const freq = wordFrequency(words);
+            const sorted = Object.entries(freq).sort((a,b) => b[1] - a[1]).slice(0, 10);
+            const maxCount = sorted.length ? sorted[0][1] : 1;
+
+            // update UI
+            document.getElementById('totalWords').textContent = totalWords;
+            document.getElementById('keywordDensity').textContent = keywordDensity.toFixed(2) + '%';
+            document.getElementById('readabilityScore').textContent = readability.toFixed(1);
+            document.getElementById('keywordCount').textContent = keywordCount;
+            document.getElementById('readabilityLabel').textContent = label;
+
+            // density table
+            const tbody = document.getElementById('densityBody');
+            tbody.innerHTML = '';
+            sorted.forEach(([word, count]) => {
+                const pct = ((count / totalWords) * 100).toFixed(2);
+                const barWidth = (count / maxCount) * 100;
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${word}</td>
+                    <td>${count}</td>
+                    <td>${pct}%</td>
+                    <td style="width:40%;"><div class="progress-bar-bg"><div class="progress-fill" style="width:${barWidth}%;"></div></div></td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            // report event
+            reportEvent('analyze', { totalWords, keywordDensity: keywordDensity.toFixed(2), readability: readability.toFixed(1) });
+        }
+
+        // ---------- Event reporting ----------
+        window.reportEvent = function(name, payload) {
+            if (typeof window.ORGANISM_METRICS_ENDPOINT === 'string' && window.ORGANISM_METRICS_ENDPOINT.length > 0) {
+                try {
+                    const body = JSON.stringify({ event: name, payload: payload || {}, timestamp: Date.now() });
+                    fetch(window.ORGANISM_METRICS_ENDPOINT, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: body,
+                        keepalive: true
+                    }).catch(() => {});
+                } catch (e) {
+                    // silently ignore
+                }
+            }
+        };
+
+        // ---------- Clear & Example ----------
+        function clearAll() {
+            document.getElementById('productTitle').value = '';
+            document.getElementById('productDesc').value = '';
+            document.getElementById('keywordInput').value = '';
+            document.getElementById('totalWords').textContent = '0';
+            document.getElementById('keywordDensity').textContent = '0%';
+            document.getElementById('readabilityScore').textContent = '—';
+            document.getElementById('keywordCount').textContent = '0';
+            document.getElementById('readabilityLabel').textContent = '—';
+            document.getElementById('densityBody').innerHTML = '';
+            reportEvent('clear', {});
+        }
+
+        function loadExample() {
+            document.getElementById('productTitle').value = 'Premium Organic Cotton Baby Onesie - Soft & Breathable';
+            document.getElementById('productDesc').value = 'Our organic cotton onesie is made from 100% GOTS certified organic cotton. Designed for maximum comfort and durability. Features reinforced snaps and tagless neck. Perfect for sensitive skin. Machine washable. Available in 6 earthy colors.';
+            document.getElementById('keywordInput').value = 'organic cotton';
+            analyze();
+            reportEvent('loadExample', {});
+        }
+
+        // ---------- Bind events ----------
+        document.getElementById('analyzeBtn').addEventListener('click', analyze);
+        document.getElementById('clearBtn').addEventListener('click', clearAll);
+        document.getElementById('exampleBtn').addEventListener('click', loadExample);
+
+        // Auto-run on page load with default example
+        window.addEventListener('DOMContentLoaded', function() {
+            // small delay to ensure layout
+            setTimeout(analyze, 100);
+            reportEvent('pageView', { tool: 'keyword-density-readability' });
+        });
+
+        // Also run on Enter in keyword field (optional)
+        document.getElementById('keywordInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') analyze();
+        });
+    })();
+</script>
+
+<section data-organism-discovery="hub" style="margin:32px auto 20px;max-width:1040px;padding:16px;border-top:1px solid #d9e2ec;color:#475569;font:14px/1.5 system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+  <strong style="display:block;color:#0f172a;margin-bottom:6px">More free browser tools</strong>
+  <p style="margin:0 0 8px">This page is part of an autonomous micro-tool network. Explore the live tool directory and related utilities.</p>
+  <p style="margin:0"><a href="https://kingms888.github.io/do-digital-organism-index/" style="color:#0f766e;font-weight:700">Open the tool directory</a> </p>
+</section>
+</body>
+</html>
